@@ -1,0 +1,164 @@
+SpectralTAD: Defining Hierarchy of Topologically Associated Domains Using Graph Theoretical Clustering
+========================================================
+author: Mikhail Dozmorov
+date: 7/29/2019
+autosize: true
+
+The Genome
+========================================================
+
+- The genome refers to the entirety of an organisms DNA and genetic information
+
+- It is made up of structures called chromosomes which contain molecules of DNA
+
+- In total, each person has 46 chromosomes with each containing unique genetic information
+
+3D Genomics
+========================================================
+
+- Chromosomes are 3D structures with loops
+
+- Areas of the chromosome measured on a linear scale might actually interact to a high degree on a 3D scale due to looping
+
+- Hi-C sequencing is a form of sequencing that allows us to identify these loops
+
+Hi-C Data as a matrix
+========================================================
+
+- The genome (chromosome) is binned to equally sized regions
+
+- Data is represented by a symmetric matrix of contacts $C_{ij}$ where entry $ij$ corresponds to the number of times region $i$ comes into contact with region $j$
+
+- Distance is measured in number of basepairs
+
+- A parameter called resolution determines region size
+
+Topologically Associated Domains (TADs)
+========================================================
+
+- TADs are regions of the genome that exhibit exceptionally high interconnectedness
+
+- Triangular structures with sharp boundaries
+
+- Boundaries are highly associated with important genomic features
+
+TADs are hierarchical
+========================================================
+
+- Organized in a hierarchy
+
+- Characterized by large “meta-TADs” containing small “sub-TADs”
+
+- Level of hierarchy has an effect on biological relevance
+
+Types of Boundaries and TADs 
+========================================================
+
+Why are TADs Important?
+========================================================
+
+- Act as walls inhibiting promoter-enhancer interaction and gene expression
+- Disruption is potential mechanism for the spread of cancer
+- Can be edited using CRISPR
+- Associated with the location of CTCF and cohesion
+- Highly conserved
+- Many possible other functions (Largely unexplored)
+
+Graph Representation of 3D Data
+========================================================
+
+- Hi-C data has a natural graph structure
+
+- In mathematical graph theory is defined by vertices V and edges E
+
+- Vertices are points and edges are lines connecting the points together
+
+- Vertices and edges are stored in an adjacency matrix $A_{ij}$ where $ij$ is the number of edges between a given set of vertices $ij$
+
+Traditional Spectral Clustering
+========================================================
+
+- Specifically designed to cluster graphs
+- Works by projecting the data into a lower dimensional space
+- Excels on noisy and non-normally distributed data (Hi-C data)
+- Clusters the adjacency matrix $A_{nxn}$
+
+How to perform spectral clustering
+========================================================
+
+- Calculate the Laplacian:
+
+$$
+D = diag(A\mathbf{1_n})
+$$
+
+$$
+\bar{L} = D^{-\frac{1}{2}}AD^{-\frac{1}{2}}
+$$
+
+- Calculate the eigenvectors of the Laplacian matrix (graph spectrum):
+
+$$
+\bar{L}\mathbf{v} = \lambda\mathbf{v}
+$$
+
+- Normalize the eigenvectors and cluster
+
+Spectral clustering with eigenvector gaps
+========================================================
+
+- Rows and columns of contact matrices are naturally ordered
+
+- TADs are continuous 
+
+- Ordering allows us to reframe clustering as finding cut points
+
+- We propose a simple, novel, approach to clustering ordered data using gaps between consecutive eigenvectors
+
+Step 1: Plot the non-normalized eigenvectors
+========================================================
+
+Step 2: Project on to Unit Circle
+========================================================
+
+Step 3: Find the k-largest gaps and partition
+========================================================
+
+Silhouette Score
+========================================================
+
+- $\textbf{A strong TAD should have a high level of interconnectedness within the TAD and a low-level outside of the TAD}$
+
+- This can be quantified using silhouette score:
+
+$$
+\s(i) = \frac{b(i)-a(i)} {max(a(i), b(i))}
+$$
+
+Where 𝑏(𝑖)  is the mean distance between point 𝑖 and all values in its cluster and 𝑎(𝑖) is the mean distance between point 𝑖 and all values outside of its cluster
+
+- Here, we define distance between two points i and j as $\frac{1}{1+C_{ij}}$
+
+Windowed Spectral Clustering
+========================================================
+
+- We know the biologically maximum TAD size (2 million bp)
+
+- For a given region we only need to consider points within the maximum TAD size
+
+- We can use a 2 million bp sliding window to perform spectral clustering and aggregate
+
+- Advantages of the sliding window
+  - Converts spectral clustering from cubic $(O(n^{3}))$ complexity to linear $(O(n))$
+  - Naturally reduces noise from redundant regions
+
+SpectralTAD algorithm
+========================================================
+
+1. Cut out a window from the matrix equal to the maximum size of a TAD
+2. Find the graph spectrum of the window and calculate eigenvector gap
+3. Find n-largest gap values
+4. Find the set of clusters that maximize the silhouette score
+5. Slide the window to the next group of loci and repeat
+
+
