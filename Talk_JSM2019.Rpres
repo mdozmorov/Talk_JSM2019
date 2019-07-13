@@ -13,6 +13,8 @@ The Genome
 
 - In total, each person has 46 chromosomes with each containing unique genetic information
 
+*** 
+
 ![image alt](./Talk_JSM2019-figure/Genome_Slide.png)
 
 3D Genomics
@@ -23,6 +25,10 @@ The Genome
 - Areas of the chromosome measured on a linear scale might actually interact to a high degree on a 3D scale due to looping
 
 - Hi-C sequencing is a form of sequencing that allows us to identify these loops
+
+*** 
+
+![image alt](./Talk_JSM2019-figure/3D_Genomics_Slide.png)
 
 Hi-C Data as a matrix
 ========================================================
@@ -35,6 +41,10 @@ Hi-C Data as a matrix
 
 - A parameter called resolution determines region size
 
+*** 
+
+![image alt](./Talk_JSM2019-figure/Place.png)
+
 Topologically Associated Domains (TADs)
 ========================================================
 
@@ -43,6 +53,11 @@ Topologically Associated Domains (TADs)
 - Triangular structures with sharp boundaries
 
 - Boundaries are highly associated with important genomic features
+
+***
+
+![image alt](./Talk_JSM2019-figure/Hierarchical_TADs.png)
+
 
 TADs are hierarchical
 ========================================================
@@ -53,8 +68,15 @@ TADs are hierarchical
 
 - Level of hierarchy has an effect on biological relevance
 
+***
+
+![image alt](./Talk_JSM2019-figure/Hierarchical_TADs.png)
+
 Types of Boundaries and TADs 
 ========================================================
+
+![image alt](./Talk_JSM2019-figure/Mat_Bounds.png)
+
 
 Why are TADs Important?
 ========================================================
@@ -76,6 +98,10 @@ Graph Representation of 3D Data
 - Vertices are points and edges are lines connecting the points together
 
 - Vertices and edges are stored in an adjacency matrix $A_{ij}$ where $ij$ is the number of edges between a given set of vertices $ij$
+
+***
+
+![image alt](./Talk_JSM2019-figure/Graph_Plot.png)
 
 Traditional Spectral Clustering
 ========================================================
@@ -120,26 +146,37 @@ Spectral clustering with eigenvector gaps
 Step 1: Plot the non-normalized eigenvectors
 ========================================================
 
+![image alt](./Talk_JSM2019-figure/Norm_Eigs1.png)
+
 Step 2: Project on to Unit Circle
 ========================================================
+
+![image alt](./Talk_JSM2019-figure/Norm_Eigs2.png)
 
 Step 3: Find the k-largest gaps and partition
 ========================================================
 
+![image alt](./Talk_JSM2019-figure/Norm_Eigs3.png)
+
+Step 3: Find the k-largest gaps and partition
+========================================================
+
+![image alt](./Talk_JSM2019-figure/Norm_Eigs4.png)
+
 Silhouette Score
 ========================================================
 
-- $\textbf{A strong TAD should have a high level of interconnectedness within the TAD and a low-level outside of the TAD}$
+- A strong TAD should have a high level of interconnectedness within the TAD and a low-level outside of the TAD
 
 - This can be quantified using silhouette score:
 
 $$
-\s(i) = \frac{b(i)-a(i)} {max(a(i), b(i))}
+s(i) = \frac{b(i)-a(i)} {max(a(i), b(i))}
 $$
 
-Where 𝑏(𝑖)  is the mean distance between point 𝑖 and all values in its cluster and 𝑎(𝑖) is the mean distance between point 𝑖 and all values outside of its cluster
+Where $b(i)$ is the mean distance between point $i$ and all values in its cluster and $a(i)$ is the mean distance between point $i$ all values outside of its cluster
 
-- Here, we define distance between two points i and j as $\frac{1}{1+C_{ij}}$
+- Here, we define distance between two points $i$ and $j$ as $\frac{1}{1+C_{ij}}$
 
 Windowed Spectral Clustering
 ========================================================
@@ -197,11 +234,14 @@ TAD Calling
 SpectralTAD is fast
 ========================================================
 
+![image alt](./Talk_JSM2019-figure/Runtime_Plot.png)
+
 Sparsity
 ========================================================
 - One of the main biases in HiC data
 - Characterized by random zeros in the contact matrix
 - Simulated by replacing a certain percentage of contact matrix with zeros
+
 
 SpectralTAD is robust to sparsity
 ========================================================
@@ -211,6 +251,10 @@ SpectralTAD is robust to sparsity
 Results are summarized across 25 simulated matrices
 - Our method is better than other methods, excluding - HiCSeg, at all levels of sparsity
 - Other hierarchical TAD callers (OnTAD and rGMAP) perform relatively poorly
+
+***
+
+![image alt](./Talk_JSM2019-figure/Sparsity_Comb.png)
 
 Sequencing depth
 ========================================================
@@ -227,8 +271,16 @@ SpectralTAD is robust to downsampling
 - Results are summarized across 20 simulated matrices
 - Our method outperforms all other methods excluding HiCseg at all levels of downsampling
 
+***
+
+![image alt](./Talk_JSM2019-figure/Down_Comb.png)
+
 Expression and depletion based on boundary type
 ========================================================
+
+![image alt](./Talk_JSM2019-figure/Down_Comb.png)
+
+***
 
 - Plot showing peaks within 50kb of boundary types (A & B) and –log10(P-value) for permutation tests aggregated across chromosomes (C & D)
 - A & C. Expression plots, B & D . Depletion plots
@@ -236,7 +288,7 @@ Expression and depletion based on boundary type
 
 SpectralTAD Package
 ========================================================
-- Currently available and fully functional at \href{http://bioconductor.org/packages/release/bioc/html/SpectralTAD.html}
+- Currently available and fully functional at http://bioconductor.org/packages/release/bioc/html/SpectralTAD.html
 - Two main functions: SpectralTAD and SpectralTAD_Par
 - First TAD caller designed to accept the three types of contact matrices (n x n, sparse and n x (n+3))
 - Produces a simple 3 column bed file output for each hierarchy level
@@ -251,7 +303,5 @@ Summary
 Where to view the preprint
 ========================================================
 
-- Available at \href{https://www.biorxiv.org/content/10.1101/549170v2} 
-
-
+- Available at https://www.biorxiv.org/content/10.1101/549170v2
 
