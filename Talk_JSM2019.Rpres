@@ -13,6 +13,8 @@ The Genome
 
 - In total, each person has 46 chromosomes with each containing unique genetic information
 
+![image alt](./Talk_JSM2019-figure/Genome_Slide.png)
+
 3D Genomics
 ========================================================
 
@@ -160,5 +162,96 @@ SpectralTAD algorithm
 3. Find n-largest gap values
 4. Find the set of clusters that maximize the silhouette score
 5. Slide the window to the next group of loci and repeat
+
+Determining a hierarchy of TADs
+========================================================
+
+- TADs are hierarchical in nature
+- Organized into large meta-TADs with sub-TADs within them
+- Need to find sub-TADs within those detected by sliding window
+- We use a novel metric called boundary score to achieve this
+- Boundary score is just the z-score for each eigenvector gap
+- For each initial TAD detected:
+  - Calculate the boundary score for each region within the TAD
+  - If any distance is greater than 1.96, this is a sub-TAD boundary
+  - Repeat for all sub-TADs until no z-score is greater than 1.96
+- Alternatively, we can simply repeat silhouette score maximization 
+
+TAD Calling
+========================================================
+
+- Refers to methods designed to find TAD boundaries
+- Good TAD callers must satisfy five criteria
+  - High quality TADs
+  - Speed
+  - Robustness to sequencing depth
+  - Robustness to sparsity
+  - Biologically significant boundaries
+- We compared:
+  - SpectralTAD
+  - rGMAP
+  - TopDom
+  - OnTAD
+  - HiCSeg
+
+SpectralTAD is fast
+========================================================
+
+Sparsity
+========================================================
+- One of the main biases in HiC data
+- Characterized by random zeros in the contact matrix
+- Simulated by replacing a certain percentage of contact matrix with zeros
+
+SpectralTAD is robust to sparsity
+========================================================
+
+- The percentages indicate the percentage of the matrix replaced with zeros. 
+- Jaccard refers to the similarity between the TADs detected and manually annotated TADs. 
+Results are summarized across 25 simulated matrices
+- Our method is better than other methods, excluding - HiCSeg, at all levels of sparsity
+- Other hierarchical TAD callers (OnTAD and rGMAP) perform relatively poorly
+
+Sequencing depth
+========================================================
+
+- Sequencing methods have a set number of possible reads per chromosome 
+- Characterized by different magnitudes of total contacts
+- Simulated by randomly removing contacts one at a time
+
+SpectralTAD is robust to downsampling
+========================================================
+
+- The fraction indicates the proportion of contacts removed. 
+- Jaccard refers to the similarity between the TADs detected and manually annotated TADs. 
+- Results are summarized across 20 simulated matrices
+- Our method outperforms all other methods excluding HiCseg at all levels of downsampling
+
+Expression and depletion based on boundary type
+========================================================
+
+- Plot showing peaks within 50kb of boundary types (A & B) and –log10(P-value) for permutation tests aggregated across chromosomes (C & D)
+- A & C. Expression plots, B & D . Depletion plots
+- We find that in general the expression of features like insulators and CTCF sites are higher in level 3 TADs
+
+SpectralTAD Package
+========================================================
+- Currently available and fully functional at \href{http://bioconductor.org/packages/release/bioc/html/SpectralTAD.html}
+- Two main functions: SpectralTAD and SpectralTAD_Par
+- First TAD caller designed to accept the three types of contact matrices (n x n, sparse and n x (n+3))
+- Produces a simple 3 column bed file output for each hierarchy level
+
+Summary
+========================================================
+- We have proposed a new approach for TAD detection based on spectral clustering
+- We have introduced two novel methods (sliding window and eigenvector gap clustering) for improving clustering on ordered data with size restrictions
+- The method was benchmarked against existing methods and has shown a significant improvement
+- The method has been released in an R package available on Bioconductor
+
+Where to view the preprint
+========================================================
+
+- Available at \href{https://www.biorxiv.org/content/10.1101/549170v2} 
+
 
 
