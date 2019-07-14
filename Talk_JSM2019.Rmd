@@ -1,18 +1,29 @@
 ---
 title: 'SpectralTAD: Defining Hierarchy of Topologically Associated Domains Using
   Graph Theoretical Clustering'
+short-title: 'SpectralTAD'
 author: "Mikhail Dozmorov"
 date: "July 29, 2019"
+fontsize: 24pt
 output:
-  ioslides_presentation: default
-  beamer_presentation: default
-  fig_width: 1
-  fig_height: 1
+  beamer_presentation:
+    colortheme: seahorse
+    # colortheme: dolphin
+    fig_caption: no
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    # theme: boxes
+    theme: AnnArbor
+header-includes:
+- \usepackage{qrcode}
 ---
 
 ## The Genome
- 
-<div style="float: left; width: 40%;">
+
+::: columns
+
+:::: column
 
 - The genome refers to the entirety of an organisms DNA and genetic information
 
@@ -20,17 +31,21 @@ output:
 
 - In total, each person has 46 chromosomes with each containing unique genetic information
 
-</div>
+::::
 
-<div style="float: right;width: 60%;">
+:::: column
 
 ![](./Talk_JSM2019-figure/Genome_Slide.png){width=100%;height=100%}
 
-</div>
+::::
+
+:::
 
 ## 3D Genomics
  
-<div style="float: left; width: 40%;">
+::: columns
+
+:::: column
 
 - Chromosomes are 3D structures with loops
 
@@ -38,13 +53,15 @@ output:
 
 - Hi-C sequencing is a form of sequencing that allows us to identify these loops
 
-</div>
+::::
 
-<div style="float: right;width: 60%;">
+:::: column
 
 ![](./Talk_JSM2019-figure/3D_Genomics_Slide.png){width=100%;height=100%}
 
-</div>
+::::
+
+:::
 
 ## Hi-C Data as a matrix
  
@@ -60,7 +77,9 @@ output:
 
 ## Topologically Associated Domains (TADs)
 
-<div style="float: left; width: 40%;">
+::: rows
+
+:::: row
 
 - TADs are regions of the genome that exhibit exceptionally high interconnectedness
 
@@ -68,27 +87,41 @@ output:
 
 - Boundaries are highly associated with important genomic features
 
-</div>
+::::
 
-<div style="float: right;width: 60%;">
+:::: row
 
-![](./Talk_JSM2019-figure/TAD_Plot.png){width=100%;height=100%}
+\begin{center}
+\includegraphics[width=203px,height=363px]{./Talk_JSM2019-figure/TAD_Plot.png}
+\end{center}
 
-</div>
+::::
+
+:::
 
 ## TADs are hierarchical
-<div style="float: left; width: 40%;">
+
+::: rows
+
+:::: row
+
 - Organized in a hierarchy
 
 - Characterized by large “meta-TADs” containing small “sub-TADs”
 
 - Level of hierarchy has an effect on biological relevance
-</div>
-<div style="float: right;width: 60%;">
+::::
 
-![](./Talk_JSM2019-figure/Hierarchical_TADs.png){width=100%;height=100%}
+:::: row
 
-</div>
+\begin{center}
+\includegraphics{./Talk_JSM2019-figure/Hierarchical_TADs.png}
+\end{center}
+
+
+::::
+
+:::
 
 ## Types of Boundaries and TADs 
 
@@ -107,7 +140,10 @@ output:
 - Many possible other functions (Largely unexplored)
 
 ## Graph Representation of 3D Data
-<div style="float: left; width: 40%;">
+::: columns
+
+:::: column
+
 
 - Hi-C data has a natural graph structure
 
@@ -117,13 +153,15 @@ output:
 
 - Vertices and edges are stored in an adjacency matrix $A_{ij}$ where $ij$ is the number of edges between a given set of vertices $ij$
 
-</div>
+::::
 
-<div style="float: right;width: 60%;">
+:::: column
 
 ![](./Talk_JSM2019-figure/Graph_Plot.png){width=100%;height=100%}
 
-</div>
+::::
+
+:::
 
 ## Traditional Spectral Clustering
  
@@ -261,7 +299,10 @@ Where $b(i)$ is the mean distance between point $i$ and all values in its cluste
 
 ## SpectralTAD is robust to sparsity
 
-<div style="float: left; width: 40%;">
+::: columns
+
+:::: column
+
 
 - The percentages indicate the percentage of the matrix replaced with zeros. 
 - Jaccard refers to the similarity between the TADs detected and manually annotated TADs. 
@@ -269,13 +310,15 @@ Results are summarized across 25 simulated matrices
 - Our method is better than other methods, excluding - HiCSeg, at all levels of sparsity
 - Other hierarchical TAD callers (OnTAD and rGMAP) perform relatively poorly
 
-</div>
+::::
 
-<div style="float: right;width: 60%;">
+:::: column
 
 ![](./Talk_JSM2019-figure/Sparsity_Comb.png){width=100%;height=100%}
 
-</div>
+::::
+
+:::
 
 ## Sequencing depth
 
@@ -285,32 +328,42 @@ Results are summarized across 25 simulated matrices
 
 ## SpectralTAD is robust to downsampling
 
-<div style="float: left; width: 40%;">
+::: columns
+
+:::: column
+
 
 - The fraction indicates the proportion of contacts removed. 
 - Jaccard refers to the similarity between the TADs detected and manually annotated TADs. 
 - Results are summarized across 20 simulated matrices
 - Our method outperforms all other methods excluding HiCseg at all levels of downsampling
-</div>
-<div style="float: right;width: 60%;">
+::::
+:::: column
 
 ![](./Talk_JSM2019-figure/Down_Comb.png){width=100%;height=100%}
-</div>
+::::
 
+:::
 ## Expression and depletion based on boundary type
 
-<div style="float: left; width: 40%;">
+::: columns
+
+:::: column
+
+![](./Talk_JSM2019-figure/Fig_4.png){width=100%;height=100%}
+
+::::
+
+:::: column
 
 - Plot showing peaks within 50kb of boundary types (A & B) and –log10(P-value) for permutation tests aggregated across chromosomes (C & D)
 - A & C. Expression plots, B & D . Depletion plots
 - We find that in general the expression of features like insulators and CTCF sites are higher in level 3 TADs
 
-</div>
-<div style="float: right;width: 60%;">
+::::
 
-![](./Talk_JSM2019-figure/Down_Comb.png){width=100%;height=100%}
+:::
 
-</div>
 ## SpectralTAD Package
 
 - Currently available and fully functional at http://bioconductor.org/packages/release/bioc/html/SpectralTAD.html
@@ -327,5 +380,21 @@ Results are summarized across 25 simulated matrices
 
 ## Where to view the preprint
 
+::: rows
+
+:::: row
+
 - Available at https://www.biorxiv.org/content/10.1101/549170v2
 
+::::
+
+:::: row
+
+\begin{center}
+\qrcode{https://www.biorxiv.org/content/10.1101/549170v2}
+\end{center}
+
+
+::::
+
+:::
