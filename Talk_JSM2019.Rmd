@@ -1,10 +1,9 @@
 ---
-title: 'SpectralTAD: Defining Hierarchy of Topologically Associated Domains Using
-  Graph Theoretical Clustering'
+title: 'SpectralTAD: Defining Hierarchy of Topologically Associated Domains Using Graph Theoretical Clustering'
 short-title: 'SpectralTAD'
 author: "Mikhail Dozmorov, Kellen Cresswell"
 date: "July 29, 2019"
-fontsize: 24pt
+# fontsize: 36pt
 output:
   beamer_presentation:
     colortheme: seahorse
