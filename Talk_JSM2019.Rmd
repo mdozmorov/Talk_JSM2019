@@ -2,7 +2,7 @@
 title: 'SpectralTAD: Defining Hierarchy of Topologically Associated Domains Using
   Graph Theoretical Clustering'
 short-title: 'SpectralTAD'
-author: "Mikhail Dozmorov"
+author: "Mikhail Dozmorov, Kellen Cresswell"
 date: "July 29, 2019"
 fontsize: 24pt
 output:
@@ -15,152 +15,123 @@ output:
     fonttheme: structurebold
     # theme: boxes
     theme: AnnArbor
-header-includes:
-- \usepackage{qrcode}
+# header-includes:
+# - \usepackage{qrcode}
 ---
 
 ## The Genome
 
 ::: columns
-
 :::: column
 
 - The genome refers to the entirety of an organisms DNA and genetic information
-
 - It is made up of structures called chromosomes which contain molecules of DNA
-
 - In total, each person has 46 chromosomes with each containing unique genetic information
 
 ::::
-
 :::: column
 
-![](./Talk_JSM2019-figure/Genome_Slide.png){width=100%;height=100%}
+![](img/Genome_Slide.png){width=100%;height=100%}
 
 ::::
-
 :::
 
 ## 3D Genomics
  
 ::: columns
-
 :::: column
 
-- Chromosomes are 3D structures with loops
-
-- Areas of the chromosome measured on a linear scale might actually interact to a high degree on a 3D scale due to looping
-
-- Hi-C sequencing is a form of sequencing that allows us to identify these loops
+- **Genome folding** enables interaction between distant genomic regions
+- **Hi-C sequencing** (Chromatin Conformation Capture technology) allowa for identification of genomic interactions genome-wide
 
 ::::
-
 :::: column
 
-![](./Talk_JSM2019-figure/3D_Genomics_Slide.png){width=100%;height=100%}
+![](img/3D_Genomics_Slide.png){width=100%;height=100%}
 
 ::::
-
 :::
 
 ## Hi-C Data as a matrix
- 
 
 - The genome (chromosome) is binned to equally sized regions
-
+- A parameter called resolution determines region size
 - Data is represented by a symmetric matrix of contacts $C_{ij}$ where entry $ij$ corresponds to the number of times region $i$ comes into contact with region $j$
-
 - Distance is measured in number of basepairs
 
-- A parameter called resolution determines region size
+## Hi-C Data as a matrix
 
+\begin{center}
+\includegraphics{img/hicmatrix.png}
+\end{center}
 
 ## Topologically Associated Domains (TADs)
 
 ::: rows
-
 :::: row
 
-- TADs are regions of the genome that exhibit exceptionally high interconnectedness
-
-- Triangular structures with sharp boundaries
-
-- Boundaries are highly associated with important genomic features
+- TADs are regions of the genome with high level of interactions within and low level of interactions between them
+- Boundaries are associated with specific genomic features (CTCF, cohesin, mediator)
+- Can be nested (TADs containing sub-TADs)
 
 ::::
-
 :::: row
 
 \begin{center}
-\includegraphics[width=203px,height=363px]{./Talk_JSM2019-figure/TAD_Plot.png}
+\includegraphics[width=303px,height=363px]{img/TAD_Plot.png}
 \end{center}
 
 ::::
-
 :::
+
+## Why are TADs Important?
+
+- Act as walls inhibiting promoter-enhancer interaction and gene expression
+- Disruption is potential mechanism for the spread of cancer
+- Can be altered using CRISPR
+- Established early in development and highly conserved
+- Many possible other functions (Largely unexplored)
 
 ## TADs are hierarchical
 
 ::: rows
-
 :::: row
 
 - Organized in a hierarchy
-
 - Characterized by large “meta-TADs” containing small “sub-TADs”
-
 - Level of hierarchy has an effect on biological relevance
-::::
 
+::::
 :::: row
 
 \begin{center}
-\includegraphics{./Talk_JSM2019-figure/Hierarchical_TADs.png}
+\includegraphics{img/Hierarchical_TADs.png}
 \end{center}
 
-
 ::::
-
 :::
 
 ## Types of Boundaries and TADs 
 
-
-![](./Talk_JSM2019-figure/Mat_Bounds.png){width=100%;height=100%}
-
-
-## Why are TADs Important?
-
-
-- Act as walls inhibiting promoter-enhancer interaction and gene expression
-- Disruption is potential mechanism for the spread of cancer
-- Can be edited using CRISPR
-- Associated with the location of CTCF and cohesion
-- Highly conserved
-- Many possible other functions (Largely unexplored)
+![](img/Mat_Bounds.png){width=100%;height=100%}
 
 ## Graph Representation of 3D Data
+
 ::: columns
-
 :::: column
 
+- Hi-C data has a natural graph structure, defined by vertices $V$ and edges $E$
+    - **Vertices** are genomic regions
+    - **Edges** represent interaction strength between any pair of regions
 
-- Hi-C data has a natural graph structure
-
-- In mathematical graph theory is defined by vertices V and edges E
-
-- Vertices are points and edges are lines connecting the points together
-
-- Vertices and edges are stored in an adjacency matrix $A_{ij}$ where $ij$ is the number of edges between a given set of vertices $ij$
+- Vertices and edges are stored in an **adjacency matrix** $A_{ij}$ where $ij$ is the number of edges between a given set of vertices $ij$
 
 ::::
-
 :::: column
 
-![](./Talk_JSM2019-figure/Graph_Plot.png){width=100%;height=100%}
+![](img/Graph_Plot.png){width=100%;height=100%}
 
 ::::
-
 :::
 
 ## Traditional Spectral Clustering
@@ -169,85 +140,70 @@ header-includes:
 - Specifically designed to cluster graphs
 - Works by projecting the data into a lower dimensional space
 - Excels on noisy and non-normally distributed data (Hi-C data)
-- Clusters the adjacency matrix $A_{nxn}$
+- Clusters the adjacency matrix $A_{n \times n}$
 
 ## How to perform spectral clustering
 
-
 - Calculate the Laplacian:
-
-$$
-D = diag(A\mathbf{1_n})
-$$
-
-$$
-\bar{L} = D^{-\frac{1}{2}}AD^{-\frac{1}{2}}
-$$
-
+$$D = diag(A\mathbf{1_n})$$
+$$\bar{L} = D^{-\frac{1}{2}}AD^{-\frac{1}{2}}$$
 - Calculate the eigenvectors of the Laplacian matrix (graph spectrum):
-
-$$
-\bar{L}\mathbf{v} = \lambda\mathbf{v}
-$$
-
+$$\bar{L}\mathbf{v} = \lambda\mathbf{v}$$
 - Normalize the eigenvectors and cluster
 
 ## Spectral clustering with eigenvector gaps
 
 - Rows and columns of contact matrices are naturally ordered
-
 - TADs are continuous 
-
 - Ordering allows us to reframe clustering as finding cut points
-
 - We propose a simple, novel, approach to clustering ordered data using gaps between consecutive eigenvectors
 
 ## Step 1: Plot the non-normalized eigenvectors
 
-![](./Talk_JSM2019-figure/Norm_Eigs1.png){width=100%;height=100%}
+\begin{center}
+\includegraphics[width=320px]{img/Norm_Eigs1.png}
+\end{center}
 
 ## Step 2: Project on to Unit Circle
  
-![](./Talk_JSM2019-figure/Norm_Eigs2.png){width=100%;height=100%}
+\begin{center}
+\includegraphics[width=320px]{img/Norm_Eigs2.png}
+\end{center}
 
 ## Step 3: Find the k-largest gaps and partition
 
-![](./Talk_JSM2019-figure/Norm_Eigs3.png){width=100%;height=100%}
+\begin{center}
+\includegraphics[width=320px]{img/Norm_Eigs3.png}
+\end{center}
 
 ## Step 3: Find the k-largest gaps and partition
 
-![](./Talk_JSM2019-figure/Norm_Eigs4.png){width=100%;height=100%}
+\begin{center}
+\includegraphics[width=320px]{img/Norm_Eigs4.png}
+\end{center}
 
 ## Silhouette Score
 
-- A strong TAD should have a high level of interconnectedness within the TAD and a low-level outside of the TAD
-
+- A strong TAD should have a high level of interactions within the TAD and a low level of interactions between the TAD
 - This can be quantified using silhouette score:
 
-$$
-s(i) = \frac{b(i)-a(i)} {max(a(i), b(i))}
-$$
+$$s(i) = \frac{b(i)-a(i)} {max(a(i), b(i))}$$
 
-Where $b(i)$ is the mean distance between point $i$ and all values in its cluster and $a(i)$ is the mean distance between point $i$ all values outside of its cluster
+$b(i)$ is the mean distance between point $i$ and all values in its cluster and $a(i)$ is the mean distance between point $i$ all values outside of its cluster
 
 - Here, we define distance between two points $i$ and $j$ as $\frac{1}{1+C_{ij}}$
 
 ## Windowed Spectral Clustering
- 
 
 - We know the biologically maximum TAD size (2 million bp)
-
-- For a given region we only need to consider points within the maximum TAD size
-
 - We can use a 2 million bp sliding window to perform spectral clustering and aggregate
-
 - Advantages of the sliding window
-  - Converts spectral clustering from cubic $(O(n^{3}))$ complexity to linear $(O(n))$
-  - Naturally reduces noise from redundant regions
+  - Reduced cubic complexity of spectral clustering $(O(n^{3}))$ to linear complexity $(O(n))$
+  - Naturally discards noisy interactions at large genomic distances
 
 ## SpectralTAD algorithm
  
-1. Cut out a window from the matrix equal to the maximum size of a TAD
+1. Cut out a window from the matrix equal to the maximum size of a TAD (2Mb)
 2. Find the graph spectrum of the window and calculate eigenvector gap
 3. Find n-largest gap values
 4. Find the set of clusters that maximize the silhouette score
@@ -255,40 +211,34 @@ Where $b(i)$ is the mean distance between point $i$ and all values in its cluste
 
 ## Determining a hierarchy of TADs
 
-- TADs are hierarchical in nature
-- Organized into large meta-TADs with sub-TADs within them
+- TADs are hierarchical in nature (organized into large meta-TADs with sub-TADs within them)
 - Need to find sub-TADs within those detected by sliding window
-- We use a novel metric called boundary score to achieve this
-- Boundary score is just the z-score for each eigenvector gap
+- To find sub-TADs, we use a novel metric called boundary score
+- **Boundary score** is just the z-score for each eigenvector gap
+
+## Determining a hierarchy of TADs
+
 - For each initial TAD detected:
-  - Calculate the boundary score for each region within the TAD
-  - If any distance is greater than 1.96, this is a sub-TAD boundary
+  - Calculate the boundary score for each consecutive pair of regions
+  - If any boundary score is greater than 1.96, this is a sub-TAD boundary
   - Repeat for all sub-TADs until no z-score is greater than 1.96
-- Alternatively, we can simply repeat silhouette score maximization 
 
 ## TAD Calling
 
 - Refers to methods designed to find TAD boundaries
-- Good TAD callers must satisfy five criteria
-  - High quality TADs
-  - Speed
-  - Robustness to sequencing depth
-  - Robustness to sparsity
-  - Biologically significant boundaries
-- We compared:
-  - SpectralTAD
-  - rGMAP
+- Good TAD callers must satisfy three criteria:
+  - Be robust to Hi-C data imperfections (resolution, sparsity, sequencing depth)
+  - Detect biologically significant, hierarchical TAD boundaries
+  - Be fast
+- We compared SpectralTAD against four TAD callers:
   - TopDom
-  - OnTAD
   - HiCSeg
+  - OnTAD
+  - rGMAP
 
-## SpectralTAD is fast
- 
-- $\textbf{A.}$ Runtimes for various TAD callers at different chromosome sizes
+## SpectralTAD is robust to resolution
 
-- $\textbf{B.}$ Runtimes for various TAD callers across all chromosomes (25kb data)
-
-![](./Talk_JSM2019-figure/Runtime_Plot.png){width=100%;height=100%}
+![](img/Resolution.png){width=100%;height=100%}
 
 ## Sparsity
 
@@ -296,105 +246,90 @@ Where $b(i)$ is the mean distance between point $i$ and all values in its cluste
 - Characterized by random zeros in the contact matrix
 - Simulated by replacing a certain percentage of contact matrix with zeros
 
-
 ## SpectralTAD is robust to sparsity
 
-::: columns
+- 25 simulated matrices with pre-defined TADs (HiCToolsCompare)
+- The percentage of the matrix replaced with zeros
+- Jaccard similarity between the detected and pre-defined TADs
 
-:::: column
+\begin{center}
+\includegraphics[width=210px]{img/Sparsity_Comb.png}
+\end{center}
 
+- Our method is better than other methods at all levels of sparsity (except HiCseg, which detects least biologically significant TADs)
 
-- The percentages indicate the percentage of the matrix replaced with zeros. 
-- Jaccard refers to the similarity between the TADs detected and manually annotated TADs. 
-Results are summarized across 25 simulated matrices
-- Our method is better than other methods, excluding - HiCSeg, at all levels of sparsity
-- Other hierarchical TAD callers (OnTAD and rGMAP) perform relatively poorly
-
-::::
-
-:::: column
-
-![](./Talk_JSM2019-figure/Sparsity_Comb.png){width=100%;height=100%}
-
-::::
-
-:::
-
-## Sequencing depth
-
-- Sequencing methods have a set number of possible reads per chromosome 
-- Characterized by different magnitudes of total contacts
-- Simulated by randomly removing contacts one at a time
-
-## SpectralTAD is robust to downsampling
-
-::: columns
-
-:::: column
-
+## SpectralTAD is robust to sequencing depth
 
 - The fraction indicates the proportion of contacts removed. 
-- Jaccard refers to the similarity between the TADs detected and manually annotated TADs. 
-- Results are summarized across 20 simulated matrices
-- Our method outperforms all other methods excluding HiCseg at all levels of downsampling
-::::
-:::: column
 
-![](./Talk_JSM2019-figure/Down_Comb.png){width=100%;height=100%}
-::::
+\begin{center}
+\includegraphics[width=210px]{img/Down_Comb.png}
+\end{center}
 
-:::
-## Expression and depletion based on boundary type
+- Our method outperforms all other methods at all levels of downsampling (excluding HiCSeg, which detects least biologically significant TADs)
+
+## Hierarchical TAD boundaries differ
 
 ::: columns
-
 :::: column
 
-![](./Talk_JSM2019-figure/Fig_4.png){width=100%;height=100%}
+- Boundaries shared by two TADs (Level 2) or three TADs (Level 3) are expected to be more biologically significant
+- Average number (A) and enrichment (C) of CTCF, RAD21 peaks, insulator and heterochromatin states are higher for shared TAD boundaries 
+- Average number (C) and enrichment of enhancer marks are lower for shared TAD boundaries
 
 ::::
-
 :::: column
 
-- Plot showing peaks within 50kb of boundary types (A & B) and –log10(P-value) for permutation tests aggregated across chromosomes (C & D)
-- A & C. Expression plots, B & D . Depletion plots
-- We find that in general the expression of features like insulators and CTCF sites are higher in level 3 TADs
+![](img/Fig_4.png){width=100%;height=100%}
 
 ::::
-
 :::
+
+## SpectralTAD is fast
+ 
+A) Runtimes for various TAD callers at different chromosome sizes
+B) Runtimes for various TAD callers across all chromosomes (25kb data)
+
+![](img/Runtime_Plot.png){width=100%;height=100%}
+
+## Side-by-side comparison
+
+\begin{center}
+\includegraphics[width=310px]{img/Supplemental_Fig_S2.png}
+\end{center}
 
 ## SpectralTAD Package
 
-- Currently available and fully functional at http://bioconductor.org/packages/release/bioc/html/SpectralTAD.html
-- Two main functions: SpectralTAD and SpectralTAD_Par
-- First TAD caller designed to accept the three types of contact matrices (n x n, sparse and n x (n+3))
-- Produces a simple 3 column bed file output for each hierarchy level
+- Currently available and fully functional at http://bioconductor.org/packages/SpectralTAD/
+- Two main functions: `SpectralTAD` and `SpectralTAD_Par` (parallelized)
+- Input: three types of contact matrices ($n \times n$, sparse and $n \times (n+3)$) in text format, import from `.hic` and `.cool` files supported
+- Output: A 3-column BED file output for each hierarchy level, visualization options include output for `Juicebox`
 
 ## Summary
 
-- We have proposed a new approach for TAD detection based on spectral clustering
-- We have introduced two novel methods (sliding window and eigenvector gap clustering) for improving clustering on ordered data with size restrictions
-- The method was benchmarked against existing methods and has shown a significant improvement
-- The method has been released in an R package available on Bioconductor
+- We propose a new approach for TAD detection based on spectral clustering, `SpectralTAD`
+- `SpectralTAD` implements two novel methods (sliding window and eigenvector gap clustering) for improving clustering on ordered data with size restrictions
+- Benchmarked against existing methods, `SpectralTAD` has shown a significant improvement on several criteria
+- `SpectralTAD` has been released as an R package and is available on Bioconductor
 
-## Where to view the preprint
+## Learn more
 
-::: rows
+\begin{center}
+\includegraphics[width=70px]{img/SpectralTAD_QR.png}
+\includegraphics[width=320px]{img/SpectralTAD_Biorxiv.png}
+\end{center}
 
-:::: row
+\small
+- `SpectralTAD` is available at http://bioconductor.org/packages/SpectralTAD/
+- Slides are available at https://github.com/mdozmorov/Talk_JSM2019
+- Preprint is available at https://www.biorxiv.org/content/10.1101/549170v2
 
-- Available at https://www.biorxiv.org/content/10.1101/549170v2
+\begin{center}
+\includegraphics[width=150px]{img/funding.png}
+\end{center}
 
-::::
-
-:::: row
-
+<!--
 \begin{center}
 \qrcode{https://www.biorxiv.org/content/10.1101/549170v2}
 \end{center}
-
-
-::::
-
-:::
+-->
