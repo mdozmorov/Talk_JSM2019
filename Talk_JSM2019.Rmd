@@ -41,7 +41,7 @@ output:
 :::: column
 
 - **Genome folding** enables interaction between distant genomic regions
-- **Hi-C sequencing** (Chromatin Conformation Capture technology) allowa for identification of genomic interactions genome-wide
+- **Hi-C sequencing** (Chromatin Conformation Capture technology) allows for identification of genomic interactions genome-wide
 
 ::::
 :::: column
@@ -54,9 +54,8 @@ output:
 ## Hi-C Data as a matrix
 
 - The genome (chromosome) is binned to equally sized regions
-- A parameter called resolution determines region size
+- Region size (resolution) is determined by sequencing depth
 - Data is represented by a symmetric matrix of contacts $C_{ij}$ where entry $ij$ corresponds to the number of times region $i$ comes into contact with region $j$
-- Distance is measured in number of basepairs
 
 ## Hi-C Data as a matrix
 
@@ -86,7 +85,7 @@ output:
 ## Why are TADs Important?
 
 - Act as walls inhibiting promoter-enhancer interaction and gene expression
-- Disruption is potential mechanism for the spread of cancer
+- Disruption is potential mechanism for diseases (e.g., cancer)
 - Can be altered using CRISPR
 - Established early in development and highly conserved
 - Many possible other functions (Largely unexplored)
@@ -137,7 +136,7 @@ output:
  
 
 - Specifically designed to cluster graphs
-- Works by projecting the data into a lower dimensional space
+- Works by projecting the data into a lower-dimensional space
 - Excels on noisy and non-normally distributed data (Hi-C data)
 - Clusters the adjacency matrix $A_{n \times n}$
 
@@ -202,9 +201,9 @@ $b(i)$ is the mean distance between point $i$ and all values in its cluster and 
 
 ## SpectralTAD algorithm
  
-1. Cut out a window from the matrix equal to the maximum size of a TAD (2Mb)
-2. Find the graph spectrum of the window and calculate eigenvector gap
-3. Find n-largest gap values
+1. Cut a window from the matrix equal to the maximum TAD size (2Mb)
+2. Find the graph spectrum of the window and calculate eigenvector gaps
+3. Find $n$-largest gap values
 4. Find the set of clusters that maximize the silhouette score
 5. Slide the window to the next group of loci and repeat
 
@@ -243,7 +242,7 @@ $b(i)$ is the mean distance between point $i$ and all values in its cluster and 
 
 - One of the main biases in HiC data
 - Characterized by random zeros in the contact matrix
-- Simulated by replacing a certain percentage of contact matrix with zeros
+- Simulated by replacing a certain percentage of the contact matrix with zeros
 
 ## SpectralTAD is robust to sparsity
 
@@ -299,10 +298,11 @@ B) Runtimes for various TAD callers across all chromosomes (25kb data)
 
 ## SpectralTAD Package
 
-- Currently available and fully functional at http://bioconductor.org/packages/SpectralTAD/
+- Fully functional and available at http://bioconductor.org/packages/SpectralTAD/
 - Two main functions: `SpectralTAD` and `SpectralTAD_Par` (parallelized)
 - Input: three types of contact matrices ($n \times n$, sparse and $n \times (n+3)$) in text format, import from `.hic` and `.cool` files supported
-- Output: A 3-column BED file output for each hierarchy level, visualization options include output for `Juicebox`
+- Output: A 3-column BED file for each hierarchy level
+- Visualization options include output for `Juicebox`, `HiCExplorer`
 
 ## Summary
 
