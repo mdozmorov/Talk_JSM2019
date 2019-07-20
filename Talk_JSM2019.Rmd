@@ -20,20 +20,13 @@ output:
 
 ## The Genome
 
-::: columns
-:::: column
+- Human genome is big - ~3.2 billion base pairs
+- ~2 meters (~6ft) of DNA in one cell packed into the ~10$\mu m$ nucleus
+- ~500 times distance from Earth to Sun in all cells from human body
 
-- The genome refers to the entirety of an organisms DNA and genetic information
-- It is made up of structures called chromosomes which contain molecules of DNA
-- In total, each person has 46 chromosomes with each containing unique genetic information
-
-::::
-:::: column
-
-![](img/Genome_Slide.png){width=100%;height=100%}
-
-::::
-:::
+\begin{center}
+\includegraphics[height=160px]{img/Genome_Slide.png}
+\end{center}
 
 ## 3D Genomics
  
@@ -53,7 +46,7 @@ output:
 
 ## Hi-C Data as a matrix
 
-- The genome (chromosome) is binned to equally sized regions
+- The genome (chromosome) is split into equally sized regions
 - Region size (resolution) is determined by sequencing depth
 - Data is represented by a symmetric matrix of contacts $C_{ij}$ where entry $ij$ corresponds to the number of times region $i$ comes into contact with region $j$
 
@@ -68,7 +61,7 @@ output:
 ::: rows
 :::: row
 
-- TADs are regions of the genome with high level of interactions within and low level of interactions between them
+- TADs are domains of frequent local interactions separated by boundaries across which interactions are less frequent
 - Boundaries are associated with specific genomic features (CTCF, cohesin, mediator)
 - Can be nested (TADs containing sub-TADs)
 
@@ -84,35 +77,26 @@ output:
 
 ## Why are TADs Important?
 
-- Act as walls inhibiting promoter-enhancer interaction and gene expression
-- Disruption is potential mechanism for diseases (e.g., cancer)
-- Can be altered using CRISPR
 - Established early in development and highly conserved
-- Many possible other functions (Largely unexplored)
+- TADs create "autonomous gene-domains" essentially partitioning the genome into discrete functional regions
+- Disruptions of TADs lead to de novo enhancer-promoter interactions and dysregulation of gene expression
+- Can be altered using CRISPR
 
 ## TADs are hierarchical
-
-::: rows
-:::: row
 
 - Organized in a hierarchy
 - Characterized by large “meta-TADs” containing small “sub-TADs”
 - Level of hierarchy has an effect on biological relevance
 
-::::
-:::: row
-
 \begin{center}
 \includegraphics{img/Hierarchical_TADs.png}
 \end{center}
 
-::::
-:::
-
+<!--
 ## Types of Boundaries and TADs 
 
 ![](img/Mat_Bounds.png){width=100%;height=100%}
-
+-->
 ## Graph Representation of 3D Data
 
 ::: columns
@@ -179,6 +163,7 @@ $$\bar{L}\mathbf{v} = \lambda\mathbf{v}$$
 \includegraphics[width=320px]{img/Norm_Eigs4.png}
 \end{center}
 
+<!--
 ## Silhouette Score
 
 - A strong TAD should have a high level of interactions within the TAD and a low level of interactions between the TAD
@@ -189,13 +174,14 @@ $$s(i) = \frac{b(i)-a(i)} {max(a(i), b(i))}$$
 $b(i)$ is the mean distance between point $i$ and all values in its cluster and $a(i)$ is the mean distance between point $i$ all values outside of its cluster
 
 - Here, we define distance between two points $i$ and $j$ as $\frac{1}{1+C_{ij}}$
+-->
 
 ## Windowed Spectral Clustering
 
 - We know the biologically maximum TAD size (2 million bp)
 - We can use a 2 million bp sliding window to perform spectral clustering and aggregate
 - Advantages of the sliding window
-  - Reduced cubic complexity of spectral clustering $(O(n^{3}))$ to linear complexity $(O(n))$
+  - Reduced cubic complexity of spectral clustering $O(n^{3})$ to linear complexity $O(n)$
   - Naturally discards noisy interactions at large genomic distances
 
 ## SpectralTAD algorithm
@@ -230,7 +216,6 @@ $b(i)$ is the mean distance between point $i$ and all values in its cluster and 
 
 ## TAD Calling
 
-- Refers to methods designed to find TAD boundaries
 - Good TAD callers must satisfy three criteria:
   - Be robust to Hi-C data imperfections (resolution, sparsity, sequencing depth)
   - Detect biologically significant, hierarchical TAD boundaries
@@ -275,20 +260,11 @@ $b(i)$ is the mean distance between point $i$ and all values in its cluster and 
 
 ## Hierarchical TAD boundaries differ
 
-::: columns
-:::: column
+- Boundaries shared by two TADs (Level 2) or three TADs (Level 3) are more biologically significant
 
-- Boundaries shared by two TADs (Level 2) or three TADs (Level 3) are expected to be more biologically significant
-- Average number (A) and enrichment (C) of CTCF, RAD21 peaks, insulator and heterochromatin states are higher for shared TAD boundaries 
-- Average number (C) and enrichment of enhancer marks are lower for shared TAD boundaries
-
-::::
-:::: column
-
-![](img/Fig_4.png){width=100%;height=100%}
-
-::::
-:::
+\begin{center}
+\includegraphics[width=170px]{img/Fig_4.png}
+\end{center}
 
 ## SpectralTAD is fast
  
@@ -305,11 +281,10 @@ B) Runtimes for various TAD callers across all chromosomes (25kb data)
 
 ## SpectralTAD Package
 
-- Fully functional and available at http://bioconductor.org/packages/SpectralTAD/
+- **Input**: three types of contact matrices ($n \times n$, sparse and $n \times (n+3)$) in text format, import from `.hic` and `.cool` files supported
 - Two main functions: `SpectralTAD` and `SpectralTAD_Par` (parallelized)
-- Input: three types of contact matrices ($n \times n$, sparse and $n \times (n+3)$) in text format, import from `.hic` and `.cool` files supported
-- Output: A 3-column BED file for each hierarchy level
-- Visualization options include output for `Juicebox`, `HiCExplorer`
+- **Output**: A 3-column BED file for each hierarchy level
+- Visualization options include output for `Juicebox`
 
 ## Summary
 
